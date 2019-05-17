@@ -1,5 +1,6 @@
 import java.util.HashSet;
 import java.util.HashMap;
+import java.util.Arrays;
 
 public class Solution384 {
     public static int lengthOfLongestSubstring(String s) {
@@ -101,17 +102,60 @@ public class Solution384 {
         return max;
     }
 
-    public static void main(String[] args) {
-        String s1 = "abcabcbb";
-        String s2 = "bbbb";
-        String s3 = "aab";
-        String s4 = "abcabcdceba";
-        String s5 = "an++--viaj";
-        System.out.println(lengthOfLongestSubstring2(s1));
-        System.out.println(lengthOfLongestSubstring2(s2));
-        System.out.println(lengthOfLongestSubstring2(s3));
-        System.out.println(lengthOfLongestSubstring2(s4));
-        System.out.println(lengthOfLongestSubstring2(s5));
+    public static int lengthOfLongestSubstring3(String s) {
+        // write your code here
+        char[] chars = s.toCharArray();
+        if(chars.length<=1) {
+            return chars.length;
+        }
+
+        HashMap<Character,Integer> hashMap = new HashMap<>();
+        int max = 1;
+        int begin = 0;
+        for(int i=0; i<chars.length;i++) {
+            if(hashMap.containsKey(chars[i])) {
+                begin = Math.max(begin,hashMap.get(chars[i])+1);
+            }
+            max  = Math.max(max,i-begin+1);
+            hashMap.put(chars[i],i);
+        }
+        return max;
     }
-}
+
+    public static int lengthOfLongestSubstring4(String s) {
+        // write your code here
+        if(s.length()<=1) {
+            return s.length();
+        }
+
+        HashMap<Character,Integer> hashMap = new HashMap<>();
+        int max = 1;
+        int begin = 0;
+        for(int i=0; i<s.length();i++) {
+            if(hashMap.containsKey(s.charAt(i))) {
+                begin = Math.max(begin,hashMap.get(s.charAt(i))+1);
+            }
+            max  = Math.max(max,i-begin+1);
+            hashMap.put(s.charAt(i),i);
+        }
+        return max;
+    }
+
+    public int lengthOfLongestSubstring5(String s) {
+        // write your code here
+        int[] count = new int[256];
+        Arrays.fill(count, -1);
+
+        int start = 0;
+        int lenMax = 0;
+
+        for(int i=0; i<s.length(); i++) {
+            if(count[s.charAt(i)] >= start) {
+                lenMax = Math.max(lenMax, i - start);
+                start = count[s.charAt(i)] + 1;
+            }
+            count[s.charAt(i)] = i;
+        }
+
+        return Math.max(lenMax, s.length() - start);
 
